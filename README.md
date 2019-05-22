@@ -6,7 +6,7 @@ Ansible role for install Prometheus exporter that exports Gearman status.
 Requirements
 ------------
 
-Ansible.
+Ansible.  
 amd64 arch.
 
 Role Variables
