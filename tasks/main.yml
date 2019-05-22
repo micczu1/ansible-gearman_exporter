@@ -1,0 +1,60 @@
+---
+
+- name: Create the Gearman Exporter group
+  group:
+    name: "{{ __gearman_exporter_group }}"
+    state: present
+    system: true
+  when: __gearman_exporter_group is defined
+
+- name: Create the Gearman Exporter user
+  user:
+    name: "{{ __gearman_exporter_user }}"
+    groups: "{{ __gearman_exporter_group }}"
+    append: true
+    shell: /usr/sbin/nologin
+    system: true
+    createhome: false
+    home: /
+  when: __gearman_exporter_user is defined
+
+- name: Download gearman_exporter binary to local folder
+  become: false
+  get_url:
+#https://github.com/bakins/gearman-exporter/releases/download/v0.5.0/gearman-exporter.linux.amd64
+    url: "https://github.com/bakins/gearman-exporter/releases/download/v{{ gearman_exporter_version }}/gearman-exporter.linux.{{ go_arch_map[ansible_architecture] | default(ansible_architecture) }}"
+    dest: "/tmp/gearman_exporter.linux.{{ go_arch_map[ansible_architecture] | default(ansible_architecture) }}"
+  register: _download_binary
+  until: _download_binary is succeeded
+  retries: 5
+  delay: 2
+  delegate_to: localhost
+  check_mode: false
+
+- name: Propagate gearman_exporter binaries
+  copy:
+    src: "/tmp/gearman_exporter.linux.{{ go_arch_map[ansible_architecture] | default(ansible_architecture) }}"
+    dest: "/usr/local/bin/gearman_exporter"
+    mode: 0755
+    owner: root
+    group: root
+  notify:
+    - restart gearman exporter
+
+  when: not ansible_check_mode
+- name: Copy the gearman_exporter systemd service file
+  template:
+    src: gearman_exporter.service.j2
+    dest: /etc/systemd/system/gearman_exporter.service
+    owner: root
+    group: root
+    mode: 0644
+  no_log: true
+  notify:
+    - restart gearman exporter
+
+- name: Ensure gearman_exporter is enabled on boot
+  systemd:
+    name: gearman_exporter
+    state: started
+    enabled: true

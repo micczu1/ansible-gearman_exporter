@@ -1,0 +1,4 @@
+---
+gearman_exporter_version: 0.5.0
+gearman_exporter_web_listen_address: "0.0.0.0:9418"
+gearman_exporter_gearmand_adress: "127.0.0.1:4730"

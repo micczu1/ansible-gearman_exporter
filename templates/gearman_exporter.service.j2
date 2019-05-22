@@ -1,0 +1,19 @@
+{{ ansible_managed | comment }}
+
+[Unit]
+Description=Prometheus Gearman Exporter
+After=network.target
+
+[Service]
+Type=simple
+User={{ __gearman_exporter_user }}
+Group={{ __gearman_exporter_group }}
+ExecStart=/usr/local/bin/gearman_exporter \
+    --addr {{gearman_exporter_web_listen_address|default("0.0.0.0:9418")}} \
+    --gearmand {{gearman_exporter_gearmand_adress|default("127.0.0.1:4730")}}
+
+SyslogIdentifier=gearman_exporter
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

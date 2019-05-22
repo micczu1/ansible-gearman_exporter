@@ -1,0 +1,10 @@
+---
+go_arch_map:
+  i386: '386'
+  x86_64: 'amd64'
+  aarch64: 'arm64'
+  armv7l: 'armv7'
+  armv6l: 'armv6'
+
+__gearman_exporter_user: gearman-exp
+__gearman_exporter_group: gearman-exp
