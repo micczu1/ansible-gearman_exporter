@@ -1,38 +1,55 @@
-Role Name
-=========
+gearman_exporter
+================
 
-A brief description of the role goes here.
+Ansible role for install Prometheus exporter that exports Gearman status.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+Ansible.
+amd64 arch.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+All variables which can be overridden are stored in [defaults/main.yml](defaults/main.yml) file as well as in table below.
+
+| Name           | Default Value | Description                        |
+| -------------- | ------------- | -----------------------------------|
+| `gearman_exporter_version` | 0.5.0 | gearmanexporter package version. |
+| `gearman_exporter_web_listen_address` | "0.0.0.0:9418" | Address on which gearman_exporter will listen |
+| `gearman_exporter_gearmand_adress` | "127.0.0.1:4730" | Address on which gearmand is accessible |
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+None.
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+Use it in a playbook as follows:
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+```yaml
+- hosts: all
+  become: yes
+  roles:
+    - gearman_exporter
+```
+
+Configuration notes
+-------------------
+
+About usage of gearman_exporter check:  
+https://github.com/bakins/gearman-exporter/blob/master/README.md
 
 License
 -------
 
 BSD
 
-Author Information
-------------------
+Credits
+-------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+This role is inspired by https://github.com/cloudalchemy/ansible-mysqld-exporter  
+gearman-exporter is created by bakins (https://github.com/bakins/gearman-exporter) and this is only wrap-up in Ansible role.
